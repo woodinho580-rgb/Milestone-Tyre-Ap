@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
       - name: Prepare site
         run: |
           mkdir -p _site
@@ -29,15 +27,14 @@ jobs:
           from pathlib import Path
           p=Path('_site/index.html')
           s=p.read_text()
-          marker='</body>'
           if 'chatbot.js' not in s:
-              s=s.replace(marker,'<script src="chatbot.js"></script>\n'+marker)
+              s=s.replace('</body>','<script src="chatbot.js"></script></body>')
           p.write_text(s)
           PY
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
